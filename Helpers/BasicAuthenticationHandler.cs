@@ -60,6 +60,5 @@ namespace WebApi.Helpers
 
             return AuthenticateResult.Success(ticket);
         }
-
     }
 }
