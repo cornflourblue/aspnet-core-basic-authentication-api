@@ -33,16 +33,16 @@ namespace WebApi.Helpers
                 return AuthenticateResult.Fail("Missing Authorization Header");
 
             User user = null;
-            try 
+            try
             {
                 var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
                 var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':');
+                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
                 var username = credentials[0];
                 var password = credentials[1];
                 user = await _userService.Authenticate(username, password);
-            } 
-            catch 
+            }
+            catch
             {
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
@@ -50,7 +50,7 @@ namespace WebApi.Helpers
             if (user == null)
                 return AuthenticateResult.Fail("Invalid Username or Password");
 
-            var claims = new[] { 
+            var claims = new[] {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
             };
